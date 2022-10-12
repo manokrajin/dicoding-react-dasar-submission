@@ -2,16 +2,20 @@ import React from 'react';
 import Navbar from './Navbar';
 import NoteInput from './NoteInput';
 import {getInitialData, showFormattedDate} from '../utils/index'
+import NoteList from './NoteList';
+
 
 class NoteApp extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             notes: getInitialData(),
+            search:  ""
         }
 
         this.onDeleteHandler = this.onDeleteHandler.bind(this);
         this.onAddNoteHandler = this.onAddNoteHandler.bind(this);
+        this.onSearchHandler = this.onSearchHandler.bind(this);
     }
 
     onDeleteHandler(id){
@@ -19,26 +23,46 @@ class NoteApp extends React.Component {
         this.setStates({ notes });
     }
 
-    onAddNoteHandler({ title, description }) {
+    onSearchHandler(event) {
+      this.setState(() => {
+          return {
+              search: event.target.value
+          };
+      });
+  }
+
+    onAddNoteHandler({ title, body }) {
         this.setState((prevState) => {
           return {
-            contacts: [
-              ...prevState.contacts,
+            notes: [
+              ...prevState.notes,
               {
                 id: +new Date(),
                 title,
-                description,
+                body,
+                createdAt: +new Date(),
+                archived: false,
               }
             ]
           }
         });
       }
     render() {
+      const search = this.state.notes.filter(note => note.title.toLowerCase().includes(this.state.search.toLowerCase()));
+      const searchResult = search.filter((note) => {
+        return note.archived === false;
+      })
         return (
-            <div>
-                <Navbar />
-                <NoteInput/>
-            </div>
+          <>
+           <Navbar searchText={this.state.search} onSearch = {this.onSearchHandler} />
+           <div className='note-app__body'>
+               
+               <NoteInput addNote = {this.onAddNoteHandler} />
+               <h2>Daftar Catatan</h2>
+               <NoteList notes={searchResult} onDelete={this.onDeleteHandler}/>
+           </div>
+          </>
+          
         )
     }
 }
