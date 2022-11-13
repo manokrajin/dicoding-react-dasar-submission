@@ -1,5 +1,6 @@
 import React from 'react';
 import NoteItem from './NoteItem.js';
+import PropTypes from "prop-types";
 
 class NoteList extends React.Component {
     render() {
@@ -11,6 +12,8 @@ class NoteList extends React.Component {
                             key={note.id}
                             id={note.id}
                             onDelete={this.props.onDelete}
+                            onActive={this.props.onActive}
+                            onArchive={this.props.onArchive}
                             {...note}
                         />
                     ))
@@ -19,7 +22,14 @@ class NoteList extends React.Component {
         ) : (
             <p className="notes-list__empty-message">Catatan kosong</p>
         )
+        
     }
+}
+
+NoteList.propTypes = {
+    id: PropTypes.string,
+    notes: PropTypes.arrayOf(PropTypes.object).isRequired,
+    onDelete: PropTypes.func.isRequired,
 }
 
 export default NoteList;

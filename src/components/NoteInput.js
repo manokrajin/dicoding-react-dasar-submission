@@ -1,11 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class NoteInput extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            body: '',
             title: '',
-            description: '',
+   
         }
         this.onNameChangeHandler = this.onNameChangeHandler.bind(this);
         this.onDescriptionChangeHandler = this.onDescriptionChangeHandler.bind(this);
@@ -23,34 +25,33 @@ class NoteInput extends React.Component {
     onDescriptionChangeHandler(e) {
         this.setState(() => {
             return {
-                description: e.target.value,
+                body: e.target.value,
             }
         });
     }
 
     onSubmitHandler(e) {
         e.preventDefault();
-        this.props.addNotes(this.state);
+        this.props.addNote(this.state);
     }
 
     render(){
         return(
-            <form className='note-input' onSubmit={this.onSubmitHandler}>
-
-                <div className='note-input__body'>
+                <div className='note-input'>
                     <h1 className='note-input__title'>Buat Catatan</h1>
-                    <form onSubmit={this.onSubmitHandler}>
+                    <form className='note-input' onSubmit={this.onSubmitHandler}>
                         <p className="note-input__title__max-title">Sisa Karakter {50 - this.state.title.length}</p>
                         <input type='text' className='note-input-text-area' placeholder='Judul' value={this.state.title} onChange={this.onNameChangeHandler} />
                         <textarea type='text' className='note-input-text-area' placeholder='Deskripsi' value={this.state.description} onChange={this.onDescriptionChangeHandler} />
                         <button type='submit'>Tambah</button>
-                    </form>
+                        </form>
                 </div>
-
-            </form>
         )
     }
 
 }
 
+NoteInput.propTypes = {
+    addNote: PropTypes.func.isRequired,
+}
 export default NoteInput;
